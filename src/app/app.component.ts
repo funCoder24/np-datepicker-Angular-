@@ -7,4 +7,7 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'NGLIBRARY';
+newDate(event){
+console.log(event);
+}
 }

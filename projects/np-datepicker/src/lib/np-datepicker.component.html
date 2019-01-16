@@ -1,0 +1,31 @@
+<div class="pickerContainer">
+    {{"Value = "+value}}<br>
+    <input [value]="value" [disabled]="disabled" (blur)="onTouched? onTouched():''" (input)="onChange($event.target.value)" [(ngModel)]="value" [ngClass]="inputClass" [ngStyle]="inputStyle" type="text" id="npDatePicker" autocomplete="off">
+    <!-- <ng-content></ng-content> -->
+    <div [ngStyle]="pickerCalenderStyle" [ngClass]="calenderClass" class="pickerCalender" id="pickerCalender">
+        <div class="dateNavigator">
+            <a href="javascript:void(0)" class="arrowButton" (click)="decrementMonth()"><i class="fa fa-chevron-left"></i></a>
+            <select [(ngModel)]="selectedYear">
+        <option *ngFor="let year of arrayOne(100); let i = index" [value]="i+2000">{{i+2000}}</option>
+      </select>
+
+            <select [(ngModel)]="selectedMonthId">
+        <option *ngFor="let month of monthData" [value]="month.id">{{month.abbr}}</option>
+      </select>
+            <a href="javascript:void(0)" class="arrowButton" (click)="incrementMonth()"><i class="fa fa-chevron-right"></i></a>
+        </div>
+        <div class="selectedDateText">
+            {{selectedMonth.name}}{{selectedMonth && selectedDay ? ",": ""}} {{selectedDay}} {{selectedYear}}
+        </div>
+        <div class="weekText">
+            <div *ngFor="let week of weekData">
+                {{week.abbr}}
+            </div>
+        </div>
+        <div class="days">
+            <div *ngFor="let day of dayData" [ngClass]="{'active':day.day==selectedDay, 'enabled':day.enabled}" (click)="selectDay(day.day, day.dayOfWeek)">
+                {{day.day}}
+            </div>
+        </div>
+    </div>
+</div>

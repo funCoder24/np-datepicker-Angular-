@@ -1,0 +1,110 @@
+.pickerCalender.active {
+    display: block;
+}
+
+:host /deep/ input:focus~.pickerCalender {
+    display: block;
+}
+
+.pickerCalender:hover {
+    display: block;
+}
+
+.hide {
+    display: none;
+}
+
+.pickerCalender {
+    display: none;
+    width: 185px;
+    background-color: #fff;
+    font-size: 12px;
+    border-radius: 5px;
+    border: 1px solid #acc5a4;
+    box-shadow: 0px 0px 13px #5a5d6180;
+    position: relative;
+    top: 10px;
+    z-index: 1000;
+    &::before {
+        content: '';
+        z-index: -1;
+        background-color: #f8f9fa;
+        width: 12px;
+        height: 30px;
+        position: absolute;
+        top: -10px;
+        left: 30px;
+        transform: rotate(45deg);
+        box-shadow: 0px 0px 13px #5a5d6180;
+        border: 1px solid #acc5a4;
+    }
+    .dateNavigator {
+        display: flex;
+        background-color: #f8f9fa;
+        padding: 5px;
+        border-radius: 5px;
+        align-items: center;
+        .arrowButton {
+            font-size: 15px;
+            font-weight: 100;
+            padding: 0 5px;
+            text-decoration: none;
+        }
+        select {
+            font-size: 15px;
+            margin: 0 5px;
+            width: 100%;
+        }
+    }
+    .selectedDateText {
+        text-align: center;
+        font-size: 15px;
+        background-color: #f8f9fa;
+        border-top: 1px solid #e4e5e6;
+        padding: 5px 0;
+    }
+    .weekText,
+    .days {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        div {
+            // width: 100%;
+            text-align: center;
+            border-radius: 7px;
+        }
+        .active {
+            background-color: aquamarine;
+        }
+    }
+    .weekText {
+        padding: 3px 5px;
+        background-color: #f8f9fa;
+        border-bottom: 1px solid #e4e5e6;
+        color: #17a2b8;
+        font-style: italic;
+        div {
+            width: 25px;
+        }
+    }
+    .days {
+        margin-bottom: 5px;
+        align-items: center;
+        justify-items: center;
+        padding: 5px;
+        div {
+            width: 25px;
+            height: 25px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0px;
+        }
+        div.enabled {
+            cursor: pointer;
+        }
+        div.enabled:hover {
+            background-color: aquamarine;
+        }
+    }
+}
