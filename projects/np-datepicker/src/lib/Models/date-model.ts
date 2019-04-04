@@ -1,6 +1,6 @@
 import { DMType, DMTypeNp } from './types';
 
-//@dynamic
+// @dynamic
 export class DateModel {
     public static dateLanguage: string = 'np';
     
@@ -35,7 +35,7 @@ export class DateModel {
             abbr: 'Sa'
         }
     ];
-    public static weekDataNp: DMTypeNp[] = [
+    public static weekDataNp : DMTypeNp[] = [
         {
             id: 1,
             name: 'आइतवार',
@@ -177,11 +177,11 @@ export class DateModel {
         }
     ];
 
-    private static _initialDateEn: Date = new Date(1943, 3, 14);
+    // public static initialDateEn: Date = new Date(1943, 3, 14);
+
     public static get initialDateEn(): Date{
-        return this._initialDateEn;
+        return new Date(1943, 3, 14); //First Param = 1943 => year, Second Param = 3(April) => monthIndex(index starts from 0), Third Param = 14 => day of month;
     }
-    
     // public static initialDateNp : Date = new Date(2000, 1, 1); //First Param = 2000 => year, Second Param = 1(Baishak) => monthIndex(index starts from 0), Third Param = 14 => day of month
     
     private static _nepaliDateData: number[][] = [

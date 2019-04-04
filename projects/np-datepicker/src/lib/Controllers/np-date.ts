@@ -1,7 +1,6 @@
 import { DateParams, DMType, DayType, splitedDate } from '../Models/types';
 import { DateModel } from '../Models/date-model';
 import { DateHelper } from './date-helper';
-import { ThrowStmt } from '@angular/compiler';
 
 export class NpDate {
     public pickerLang: string = 'np';
@@ -16,7 +15,7 @@ export class NpDate {
     public weekDayAd: DMType;
     public dayBs: DayType;
     public dayAd: DayType;
-
+    
     constructor();
     constructor(date: string);
     constructor(date: DateParams);
@@ -42,6 +41,26 @@ export class NpDate {
 
     public toDateAD(){
         return DateHelper.toDateAD({ year: parseInt(this.yearBs), month: this.monthBs.id, dayOfMonth: this.dayBs.day });
+    }
+
+    public addDays(days: number):NpDate{
+        return new NpDate({
+            date: DateHelper.addDaysBs({
+                year: parseInt(this.yearBs), 
+                month: this.monthBs.id, 
+                dayOfMonth: this.dayBs.day
+            }, days)
+        });
+    }
+
+    public subDays(days: number): NpDate{
+        return new NpDate({
+            date: DateHelper.subDaysBs({
+                year: parseInt(this.yearBs),
+                month: this.monthBs.id,
+                dayOfMonth: this.dayBs.day
+            }, days)
+        });
     }
 
     public toString(format?: string): string {

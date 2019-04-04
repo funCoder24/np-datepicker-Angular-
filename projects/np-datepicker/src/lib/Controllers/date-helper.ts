@@ -1,6 +1,5 @@
 import { DateModel } from '../Models/date-model';
 import { splitedDate } from '../Models/types';
-// import { DateConverter } from './date-converter';
 
 export class DateHelper {
 
@@ -106,8 +105,8 @@ export class DateHelper {
         if (dateArray[0].length == 4) {
             return {
                 year: parseInt(dateArray[0]),
-                month : parseInt(dateArray[1]),
-                dayOfMonth: parseInt(dateArray[2])
+                month: dateArray[1] ? parseInt(dateArray[1]) : undefined,
+                dayOfMonth : dateArray[2] ? parseInt(dateArray[2]): undefined
             }
         }
         else if (dateArray[2].length == 4) {
@@ -122,5 +121,69 @@ export class DateHelper {
     private static addDaysAD(date : Date, days : number) : Date {
         date.setDate(date.getDate() + days - 1);
         return date;
+    }
+
+    public static addDaysBs(date: splitedDate, days: number):splitedDate{
+        let initialDays: number = days;
+        let splitedDateToReturn: splitedDate = {
+            year: 0,
+            month: 0,
+            dayOfMonth: 0
+        };
+        let yearIndex: number = date.year%2000;
+        let monthIndex : number = 0;
+
+        while(days > 365){
+            DateModel.nepaliDateData[yearIndex].forEach((month, i) => {
+                if(yearIndex == date.year%2000){
+                    if(i == date.month-1){
+                        days -= (month - date.dayOfMonth);
+                    }
+                    if(i > date.month-1){
+                        days -= month;
+                    }
+                }else{
+                    days -= month;
+                }
+            });
+            yearIndex ++;
+        }
+        splitedDateToReturn.year = yearIndex > 0 ? yearIndex+2000 : 2000;
+        if(yearIndex == date.year%2000){
+            monthIndex = date.month-1;
+        }
+        let curMonthsDays = DateModel.nepaliDateData[yearIndex][monthIndex];
+        while (days >= curMonthsDays) {
+            curMonthsDays = DateModel.nepaliDateData[yearIndex][monthIndex];
+            if(yearIndex == date.year%2000 && monthIndex == date.month-1){
+                curMonthsDays -= date.dayOfMonth;
+            }
+            days -= curMonthsDays;
+
+            monthIndex++;
+        }
+        splitedDateToReturn.month = monthIndex+1;
+        // if (days > DateModel.nepaliDateData[yearIndex][monthIndex]) {            
+        //     curMonthsDays = DateModel.nepaliDateData[yearIndex][monthIndex];
+        //     if (yearIndex == date.year % 2000 && monthIndex == date.month - 1) {
+        //         curMonthsDays -= date.dayOfMonth;
+        //     }
+        //     splitedDateToReturn.month += 1;
+        //     days -= curMonthsDays;
+        // }
+        if(days == initialDays){
+            days += date.dayOfMonth;
+        }
+        splitedDateToReturn.dayOfMonth = days;
+        return splitedDateToReturn
+    }
+
+    public static subDaysBs(date: splitedDate, days: number):splitedDate{
+        let totalDays = this.countTotalNepaliDays(date) - days;
+        return this.addDaysBs({
+            year: 2000,
+            month: 1,
+            dayOfMonth: 0
+        }, totalDays)
     }
 }

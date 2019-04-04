@@ -1,6 +1,7 @@
 import { DateModel } from '../Models/date-model';
 import { splitedDate } from '../Models/types';
 import { NpDate } from './np-date';
+import { DateHelper } from './date-helper';
 
 export class DateConverter {
     public static ADtoBS(date: Date): NpDate;
@@ -18,18 +19,32 @@ export class DateConverter {
         return npDate
     }
 
-    public static BStoAD(date: NpDate): Date;
-    public static BStoAD(date: string): Date;
-    public static BStoAD(date: NpDate | string): Date {
+    // public static BStoAD(date: NpDate): Date;
+    // public static BStoAD(date: string): Date;
+    // public static BStoAD(date: NpDate | string): Date {
+    //     let enDate: Date;
+    //     let npDate: NpDate;
+    //     if (typeof date == "string") {
+    //         npDate = new NpDate(date);
+    //     } else if (date instanceof NpDate) {
+    //         npDate = date;
+    //     }
+    //     let daysCount: number = this.countTotalNepaliDays(npDate);
+    //     enDate = this.addDaysAD(DateModel.initialDateEn, daysCount);
+    //     return enDate;
+    // }
+
+    public static BStoAD(date : NpDate) : Date;
+    public static BStoAD(date : string) : Date;
+    public static BStoAD(date : NpDate | string) : Date {
         let enDate: Date;
-        let npDate: NpDate;
+        let splDate: splitedDate;
         if (typeof date == "string") {
-            npDate = new NpDate(date);
+            splDate = DateHelper.splitDate(date);
         } else if (date instanceof NpDate) {
-            npDate = date;
+            splDate = this.splitDate(date);
         }
-        let daysCount: number = this.countTotalNepaliDays(npDate);
-        enDate = this.addDaysAD(DateModel.initialDateEn, daysCount);
+        enDate = DateHelper.toDateAD(splDate);
         return enDate;
     }
 
@@ -68,8 +83,23 @@ export class DateConverter {
             date = new Date(date);
         }
         if (this.isEnglishDateInRange(date)) {
-            let totalDays = Math.floor((Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()) - Date.UTC(DateModel.initialDateEn.getFullYear(), DateModel.initialDateEn.getMonth(), DateModel.initialDateEn.getDate())) / (1000 * 60 * 60 * 24));
-            return totalDays;
+            let totalDays = Math.floor(
+                (Date.UTC(
+                    date.getFullYear(), 
+                    date.getMonth(), 
+                    date.getDate()
+                ) - 
+                Date.UTC(
+                    1943, 
+                    3, 
+                    14
+                    // DateModel.initialDateEn.getFullYear(), 
+                    // DateModel.initialDateEn.getMonth(), 
+                    // DateModel.initialDateEn.getDate()
+                )
+            ) / 
+            (1000 * 60 * 60 * 24));
+            return totalDays+1;
         }
         console.log("Date is out of range. Date range must be between 1943 and 2042");
         return -1;
@@ -116,15 +146,16 @@ export class DateConverter {
         }
         year = yearIndex + 2000;
         let curMonthsDays = DateModel.nepaliDateData[yearIndex][monthIndex];
-        while (days > curMonthsDays) {
+        while (days >= curMonthsDays) {
             curMonthsDays = DateModel.nepaliDateData[yearIndex][monthIndex];
             days -= curMonthsDays;
 
             monthIndex++;
         }
         month = monthIndex + 1;
-        if (days > DateModel.nepaliDateData[yearIndex][monthIndex]) {
+        if (days >= DateModel.nepaliDateData[yearIndex][monthIndex]) {
             month += 1;
+            days -= DateModel.nepaliDateData[yearIndex][monthIndex]
         }
         dayOfMonth = days;
         return new NpDate({

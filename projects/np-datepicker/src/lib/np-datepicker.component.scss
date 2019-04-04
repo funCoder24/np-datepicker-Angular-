@@ -2,7 +2,10 @@
     display: block;
 }
 
-:host /deep/ input:focus~.pickerCalender {
+// :host /deep/ input:focus~.pickerCalender {
+//     display: block;
+// }
+:host input:focus~.pickerCalender {
     display: block;
 }
 
@@ -44,16 +47,31 @@
         padding: 5px;
         border-radius: 5px;
         align-items: center;
+        justify-content: space-between;
+        select {
+            appearance: none;
+            padding: 2px;
+            border: none;
+            background-color: #f8f9fa;
+            text-align-last: center;
+        }
+        select:focus {
+            outline: none;
+        }
+        .YMSection {
+            display: flex;
+            justify-content: center;
+            flex-grow: 2;
+        }
         .arrowButton {
-            font-size: 15px;
+            font-size: 10px;
             font-weight: 100;
-            padding: 0 5px;
+            padding: 0 7px;
             text-decoration: none;
         }
         select {
             font-size: 15px;
-            margin: 0 5px;
-            width: 100%;
+            // width: 100%;
         }
     }
     .selectedDateText {
@@ -78,9 +96,10 @@
         }
     }
     .weekText {
-        padding: 3px 5px;
+        padding: 5px;
         background-color: #f8f9fa;
         border-bottom: 1px solid #e4e5e6;
+        border-top: 1px solid #e4e5e6;
         color: #17a2b8;
         font-style: italic;
         div {
@@ -88,7 +107,7 @@
         }
     }
     .days {
-        margin-bottom: 5px;
+        // margin-bottom: 5px;
         align-items: center;
         justify-items: center;
         padding: 5px;
@@ -106,5 +125,32 @@
         div.enabled:hover {
             background-color: aquamarine;
         }
+    }
+    button {
+        width: 100%;
+        height: 30px;
+        border: 1px solid #e4e5e6;
+        border-radius: 0 0 5px 5px;
+        background-color: #f8f9fa;
+        color: #17a2b8;
+    }
+    button:focus {
+        outline: none;
+    }
+    button:hover {
+        cursor: pointer;
+        font-size: 15px;
+    }
+    .todaybtn {
+        background-position: center;
+        transition: background 0.8s;
+    }
+    .todaybtn:hover {
+        background: #f8f9fa radial-gradient(circle, transparent 1%, #f8f9fa 1%) center/15000%;
+    }
+    .todaybtn:active {
+        background-color: #b4babe;
+        background-size: 100%;
+        transition: background 0s;
     }
 }

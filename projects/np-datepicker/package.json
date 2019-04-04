@@ -1,8 +1,22 @@
 {
-  "name": "np-datepicker",
-  "version": "1.0.0",
-  "peerDependencies": {
-    "@angular/common": "^7.1.0",
-    "@angular/core": "^7.1.0"
-  }
+    "name": "np-datepicker",
+    "version": "1.1.0",
+    "peerDependencies": {
+        "@angular/common": "^7.1.0",
+        "@angular/core": "^7.1.0"
+    }
 }
+// In order to publish new version to npm
+// -Mack necessary changes in your library.
+// -Change the version of the library from above.
+// -To build library run this command.
+//  --ng build np-datepicker. (This will build your library into dist folder).
+// -If build successfull.
+// -Publish your library to npm.
+// -First navigate to dist folder.
+// -To publish library make sure you are logged in to npm account.
+// -To check if you are logged in to your npm account run this command.
+//  -npm whoami
+// -The above command will return your npm username of the npm account you are currently logged in.
+// -After you login to npm account run this command to publish your library to npm.
+//  -npm publish

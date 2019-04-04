@@ -1,26 +1,38 @@
-import { Component, OnInit, forwardRef, EventEmitter, Output, Input } from '@angular/core';
-import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
+import { Component, OnInit, Input, forwardRef, Output, EventEmitter } from '@angular/core';
+
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DMType, splitedDate } from './Models/types';
 import { DateModel } from './Models/date-model';
+import { DateHelper } from './Controllers/date-helper';
 import { NpDate } from './Controllers/np-date';
 import { DateConverter } from './Controllers/date-converter';
-import { DateHelper } from './Controllers/date-helper';
 
 @Component({
   selector: 'np-datepicker',
-  templateUrl : './np-datepicker.component.html',
-  styleUrls : ['./np-datepicker.component.scss'],
-  providers : [
+  templateUrl: './np-datepicker.component.html',
+  styleUrls: ['./np-datepicker.component.scss'],
+  providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => NpDatepickerComponent),
+      useExisting : forwardRef(() => NpDatepickerComponent),
       multi: true
     }
   ]
 })
 export class NpDatepickerComponent implements OnInit, ControlValueAccessor {
 
-  onChange: (value: any) => void;
+  public onChange(value: any): void{
+    let splitDate = DateHelper.splitDate(value.toString());
+    if(splitDate){
+      this.selectedYear = splitDate.year.toString();
+      this.selectedMonthId = splitDate.month;
+      this.selectedDay = splitDate.dayOfMonth ? splitDate.dayOfMonth.toString():"";
+      this.selectedDate = splitDate;
+      if(this.selectedDay){
+        this.change.emit(new NpDate({date: splitDate}));
+      }
+    }
+  };
   onTouched: () => {
     onChange();
   };
@@ -138,12 +150,17 @@ export class NpDatepickerComponent implements OnInit, ControlValueAccessor {
   @Input() calenderClass: { [key: string]: boolean };
   @Input() calenderStyle: { [key: string]: string };
 
+  @Input() todayBtn: boolean;
+
+  @Input() dateFormat: string;
+  @Input() placeholder: string;
 
   @Output() change = new EventEmitter();
 
-  public selectedDay: string;
-  public selectedWeekDay: string;
-  public className: any;
+  public selectedDate: splitedDate;
+  private selectedDay: string;
+  private selectedWeekDay: string;
+  private className: any;
   private textBox: HTMLInputElement;
   public pickerCalenderStyle;
 
@@ -167,44 +184,50 @@ export class NpDatepickerComponent implements OnInit, ControlValueAccessor {
       this.selectedYear = npDateNow.yearBs;
       this.selectedMonth = npDateNow.monthBs;
     }
-    // this.setCalendersPosition();
-    // this.showCalender = false;
-    // document.getElementById("npDatePickerInput").onfocus = (e) => {
-    //   this.setCalendersPosition(e);
-    // }
-    // this.selectedDay = npDateNow.dayBs.day.toString();
+    this.selectedDate = {
+      year: parseInt(this.selectedYear),
+      month: this.selectedMonth.id,
+      dayOfMonth: parseInt(this.selectedDay)
+    };
   }
 
-  // setCalendersPosition(e) {
-  //   debugger
-  //   let npDPInput = e.target;
-  //   this.pickerCalenderStyle = {
-  //     'top': (npDPInput.offsetTop + npDPInput.offsetHeight) + 'px',
-  //     'left': ((npDPInput.offsetLeft + npDPInput.offsetWidth / 2) - (93.5)) + 'px'
-  //   };
+public selectTodayDate(){
+  let npDateNow = DateConverter.ADtoBS(new Date());
+  
+  this.selectedYear = npDateNow.yearBs;
+  this.selectedMonth = npDateNow.monthBs;
+  this.selectDay(npDateNow.dayBs.day.toString(), npDateNow.dayBs.weekDay.id.toString());
 
-
-  // }
+  this.selectedDate = {
+    year: parseInt(this.selectedYear),
+    month: this.selectedMonth.id,
+    dayOfMonth: parseInt(this.selectedDay)
+  };
+}
 
   selectDay(day: string, weekDay: string) {
     if (day && weekDay) {
       this.selectedDay = day;
       this.selectedWeekDay = weekDay;
 
+      this.selectedDate = {
+        year: parseInt(this.selectedYear),
+        month: this.selectedMonth.id,
+        dayOfMonth: parseInt(this.selectedDay)
+      };
 
-      let selectedDate = this.selectedYear + "/" + this.selectedMonth.id + "/" + this.selectedDay;
-
-      this.value = selectedDate;
-      if(this.onChange){
+      let selectedDate = new NpDate({
+        date: this.selectedYear + "/" + this.selectedMonth.id + "/" + this.selectedDay,
+        dateFormat: this.dateFormat
+      });
+      this.value = selectedDate.toString();
+      if (this.onChange) {
         this.onChange(selectedDate);
       }
-      
       let ad = DateConverter.BStoAD(this.selectedYear + "/" + this.selectedMonth.id + "/" + this.selectedDay);
       // let bs = DateConverter.ADtoBS(ad);
-      let bs = new NpDate({
-        date: this.selectedYear + "/" + this.selectedMonth.id + "/" + this.selectedDay
-      });
-      this.change.emit(bs);
+      let bs = selectedDate;
+      // this.change.emit(bs);
     }
   }
 
